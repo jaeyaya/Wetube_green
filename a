@@ -1,0 +1,202 @@
+[33mcommit 4b16117b96e46536721b129c75f2a4cd88988646[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m)[m
+Author: jaeyaya <45762003+jaeyaya@users.noreply.github.com>
+Date:   Wed Sep 18 15:06:30 2019 +0900
+
+    myGit first commit !
+
+[1mdiff --git a/.babelrc b/.babelrc[m
+[1mnew file mode 100644[m
+[1mindex 0000000..ff3059c[m
+[1m--- /dev/null[m
+[1m+++ b/.babelrc[m
+[36m@@ -0,0 +1,3 @@[m
+[32m+[m[32m{[m
+[32m+[m[32m    "presets": ["@babel/preset-env"][m
+[32m+[m[32m}[m
+\ No newline at end of file[m
+[1mdiff --git a/app.js b/app.js[m
+[1mnew file mode 100644[m
+[1mindex 0000000..cd22f96[m
+[1m--- /dev/null[m
+[1m+++ b/app.js[m
+[36m@@ -0,0 +1,32 @@[m
+[32m+[m[32mimport express from "express";[m
+[32m+[m[32mimport morgan from "morgan";[m
+[32m+[m[32mimport helmet from "helmet";[m
+[32m+[m[32mimport cookieParser from "cookie-parser";[m
+[32m+[m[32mimport bodyParser from "body-parser";[m
+[32m+[m[32mimport { localsMiddleware } from "./middlewares";[m
+[32m+[m[32mimport routes from "./routes";[m
+[32m+[m[32mimport userRouter from "./routers/userRouter";[m
+[32m+[m[32mimport videoRouter from "./routers/videoRouter";[m
+[32m+[m[32mimport globalRouter from "./routers/globlaRouter";[m
+[32m+[m[32mconst app = express();[m
+[32m+[m
+[32m+[m[32mapp.use(helmet());[m
+[32m+[m[32mapp.set("view engine", "pug");[m
+[32m+[m[32mapp.use(cookieParser());[m
+[32m+[m[32mapp.use(bodyParser.json());[m
+[32m+[m[32mapp.use(bodyParser.urlencoded({extends : true}));[m
+[32m+[m[32mapp.use(morgan("dev"));[m
+[32m+[m[32mapp.use(localsMiddleware)[m
+[32m+[m
+[32m+[m
+[32m+[m
+[32m+[m
+[32m+[m[32mapp.use(routes.home, globalRouter);[m
+[32m+[m[32mapp.use(routes.users, userRouter);[m
+[32m+[m[32mapp.use(routes.videos, videoRouter);[m
+[32m+[m
+[32m+[m[32mexport default app;[m
+[32m+[m
+[32m+[m
+[32m+[m
+[32m+[m
+[1mdiff --git a/controllers/userController.js b/controllers/userController.js[m
+[1mnew file mode 100644[m
+[1mindex 0000000..60ded39[m
+[1m--- /dev/null[m
+[1m+++ b/controllers/userController.js[m
+[36m@@ -0,0 +1,7 @@[m
+[32m+[m[32mexport const join = (req, res) => res.render("join");[m
+[32m+[m[32mexport const login = (req, res) => res.render("login");[m
+[32m+[m[32mexport const logout = (req, res) => res.render("logout");[m
+[32m+[m[32mexport const users = (req, res) => res.render("users");[m
+[32m+[m[32mexport const userDetail = (req, res) => res.render("userDetail");[m
+[32m+[m[32mexport const editProfile = (req, res) => res.render("editProfile");[m
+[32m+[m[32mexport const changePassword = (req, res) => res.render("changePassword");[m
+[1mdiff --git a/controllers/videoController.js b/controllers/videoController.js[m
+[1mnew file mode 100644[m
+[1mindex 0000000..6d9f7da[m
+[1m--- /dev/null[m
+[1m+++ b/controllers/videoController.js[m
+[36m@@ -0,0 +1,7 @@[m
+[32m+[m[32mexport const home = (req, res) => res.render("home");[m
+[32m+[m[32mexport const search = (req, res) => res.render("search");[m
+[32m+[m[32mexport const videos = (req, res) => res.render("videos");[m
+[32m+[m[32mexport const upload = (req, res) => res.render("upload");[m
+[32m+[m[32mexport const videoDetail = (req, res) => res.render("videoDetail");[m
+[32m+[m[32mexport const editVideo = (req, res) => res.render("editVideo");[m
+[32m+[m[32mexport const deleteVideo = (req, res) => res.render("deleteVideo");[m
+\ No newline at end of file[m
+[1mdiff --git a/index.js b/index.js[m
+[1mdeleted file mode 100644[m
+[1mindex e69de29..0000000[m
+[1mdiff --git a/init.js b/init.js[m
+[1mnew file mode 100644[m
+[1mindex 0000000..3c51cef[m
+[1m--- /dev/null[m
+[1m+++ b/init.js[m
+[36m@@ -0,0 +1,8 @@[m
+[32m+[m[32mimport app from "./app";[m
+[32m+[m
+[32m+[m[32mconst PORT = 4000;[m
+[32m+[m
+[32m+[m[32mconst handleListening = () =>[m
+[32m+[m[32mconsole.log(`✅Listening on : http"//localhost:${PORT}`)[m
+[32m+[m
+[32m+[m[32mapp.listen(PORT, handleListening);[m
+\ No newline at end of file[m
+[1mdiff --git a/middlewares.js b/middlewares.js[m
+[1mnew file mode 100644[m
+[1mindex 0000000..6179b3a[m
+[1m--- /dev/null[m
+[1m+++ b/middlewares.js[m
+[36m@@ -0,0 +1,7 @@[m
+[32m+[m[32mimport routes from "./routes";[m
+[32m+[m
+[32m+[m[32mexport const localsMiddleware = (req, res, next) => {[m
+[32m+[m[32m    res.locals.siteName = "WeTube";[m
+[32m+[m[32m    res.locals.routes = routes;[m
+[32m+[m[32m    next();[m
+[32m+[m[32m}[m
+\ No newline at end of file[m
+[1mdiff --git a/package.json b/package.json[m
+[1mindex 4b80f1f..2ad1d5b 100644[m
+[1m--- a/package.json[m
+[1m+++ b/package.json[m
+[36m@@ -6,6 +6,20 @@[m
+   "author": "Jaeyaya",[m
+   "license": "ISC",[m
+   "dependencies": {[m
+[31m-    "express": "^4.17.1"[m
+[32m+[m[32m    "@babel/core": "^7.6.0",[m
+[32m+[m[32m    "@babel/node": "^7.6.1",[m
+[32m+[m[32m    "@babel/preset-env": "^7.6.0",[m
+[32m+[m[32m    "body-parser": "^1.19.0",[m
+[32m+[m[32m    "cookie-parser": "^1.4.4",[m
+[32m+[m[32m    "express": "^4.17.1",[m
+[32m+[m[32m    "helmet": "^3.21.0",[m
+[32m+[m[32m    "morgan": "^1.9.1",[m
+[32m+[m[32m    "pug": "^2.0.4"[m
+[32m+[m[32m  },[m
+[32m+[m[32m  "scripts": {[m
+[32m+[m[32m    "start": "nodemon --exec babel-node init.js --delay 2"[m
+[32m+[m[32m  },[m
+[32m+[m[32m  "devDependencies": {[m
+[32m+[m[32m    "nodemon": "^1.19.2"[m
+   }[m
+ }[m
+[1mdiff --git a/routers/globlaRouter.js b/routers/globlaRouter.js[m
+[1mnew file mode 100644[m
+[1mindex 0000000..8ac665a[m
+[1m--- /dev/null[m
+[1m+++ b/routers/globlaRouter.js[m
+[36m@@ -0,0 +1,15 @@[m
+[32m+[m[32mimport express from "express";[m
+[32m+[m[32mimport routes from "../routes";[m
+[32m+[m[32mimport { home, search } from "../controllers/videoController";[m
+[32m+[m[32mimport { join, login, logout } from "../controllers/userController";[m
+[32m+[m
+[32m+[m[32mconst globalRouter = express.Router();[m
+[32m+[m
+[32m+[m[32mglobalRouter.get(routes.home, home);[m
+[32m+[m[32mglobalRouter.get(routes.search, search);[m
+[32m+[m[32mglobalRouter.get(routes.join, join);[m
+[32m+[m[32mglobalRouter.get(routes.login, login);[m
+[32m+[m[32mglobalRouter.get(routes.logout, logout);[m
+[32m+[m
+[32m+[m
+[32m+[m[32mexport default globalRouter;[m
+[1mdiff --git a/routers/userRouter.js b/routers/userRouter.js[m
+[1mnew file mode 100644[m
+[1mindex 0000000..ee87f06[m
+[1m--- /dev/null[m
+[1m+++ b/routers/userRouter.js[m
+[36m@@ -0,0 +1,13 @@[m
+[32m+[m[32mimport express from "express";[m
+[32m+[m[32mimport routes from "../routes";[m
+[32m+[m[32mimport { userDetail, editProfile, changePassword, users } from "../controllers/userController";[m
+[32m+[m
+[32m+[m[32mconst userRouter = express.Router();[m
+[32m+[m
+[32m+[m[32muserRouter.get(routes.users, users);[m
+[32m+[m[32muserRouter.get(routes.userDetail, userDetail);[m
+[32m+[m[32muserRouter.get(routes.editProfile, editProfile);[m
+[32m+[m[32muserRouter.get(routes.changePassword, changePassword);[m
+[32m+[m
+[32m+[m
+[32m+[m[32mexport default userRouter;[m
+[1mdiff --git a/routers/videoRouter.js b/routers/videoRouter.js[m
+[1mnew file mode 100644[m
+[1mindex 0000000..633ac86[m
+[1m--- /dev/null[m
+[1m+++ b/routers/videoRouter.js[m
+[36m@@ -0,0 +1,13 @@[m
+[32m+[m[32mimport express from "express";[m
+[32m+[m[32mimport routes from "../routes"[m
+[32m+[m[32mimport { upload, videoDetail, editVideo, deleteVideo, videos } from "../controllers/videoController";[m
+[32m+[m
+[32m+[m[32mconst videoRouter = express.Router();[m
+[32m+[m
+[32m+[m[32mvideoRouter.get(routes.videos, videos);[m
+[32m+[m[32mvideoRouter.get(routes.upload, upload);[m
+[32m+[m[32mvideoRouter.get(routes.videoDetail, videoDetail);[m
+[32m+[m[32mvideoRouter.get(routes.editVideo, editVideo);[m
+[32m+[m[32mvideoRouter.get(routes.deleteVideo, deleteVideo);[m
+[32m+[m
+[32m+[m[32mexport default videoRouter;[m
+\ No newline at end of file[m
+[1mdiff --git a/routes.js b/routes.js[m
+[1mnew file mode 100644[m
+[
